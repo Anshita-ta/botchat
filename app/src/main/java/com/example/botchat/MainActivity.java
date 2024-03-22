@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import retrofit2.Call;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.os.Bundle;
@@ -23,29 +24,30 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-private RecyclerView chatsRV;
-private EditText userMsgEdit;
-private FloatingActionButton sendMsgFAB;
-private final String BOT_KEY="bot";
-private  final String USER_KEY="user";
-private ArrayList<ChatsModel>chatsModelArrayList;
-private ChatRVAdapter chatRVAdapter;
+    private RecyclerView chatsRV;
+    private EditText userMsgEdit;
+    private FloatingActionButton sendMsgFAB;
+    private final String BOT_KEY = "bot";
+    private final String USER_KEY = "user";
+    private ArrayList<ChatsModel> chatsModelArrayList;
+    private ChatRVAdapter chatRVAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        chatsRV=findViewById(R.id.personalChats);
-        userMsgEdit=findViewById(R.id.edtMessage);
-        sendMsgFAB=findViewById(R.id.idFABSend);
-        chatsModelArrayList=new ArrayList<>();
-        chatRVAdapter=new ChatRVAdapter(chatsModelArrayList,this);
-        LinearLayoutManager manager=new LinearLayoutManager(this);
+        chatsRV = findViewById(R.id.personalChats);
+        userMsgEdit = findViewById(R.id.edtMessage);
+        sendMsgFAB = findViewById(R.id.idFABSend);
+        chatsModelArrayList = new ArrayList<>();
+        chatRVAdapter = new ChatRVAdapter(chatsModelArrayList, this);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
         chatsRV.setLayoutManager(manager);
         chatsRV.setAdapter(chatRVAdapter);
         sendMsgFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userMsgEdit.getText().toString().isEmpty()){
+                if (userMsgEdit.getText().toString().isEmpty()) {
                     Toast.makeText(MainActivity.this, "Please Enter Your Message", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -54,6 +56,7 @@ private ChatRVAdapter chatRVAdapter;
             }
         });
     }
+
     private void getResponse(String message) {
         chatsModelArrayList.add(new ChatsModel(message, USER_KEY));
         chatRVAdapter.notifyDataSetChanged();
@@ -65,8 +68,8 @@ private ChatRVAdapter chatRVAdapter;
                 .addConverterFactory(GsonConventryFactory.create())
                 .build();
         retrofitapi retrofitApi = retrofit.create(retrofitapi.class);
-        Call<MsgModal> call = retrofitApi.getMessage(url);
-        call.enqueue(new Callback<MsgModal>() {
+        Call<MsgModal> call;
+        Call.enqueue(new Callback<MsgModal>() {
 
             @Override
             public void onResponse(Call<MsgModal> call, Response<MsgModal> response) {
@@ -84,3 +87,5 @@ private ChatRVAdapter chatRVAdapter;
             }
 
         });
+    }
+}
